@@ -50,26 +50,38 @@ class App{
     }
 
     _setupModel(){
-        const loader = new THREE.TextureLoader();
-
         const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-        const material = new THREE.MeshPhongMaterial({
-            map: loader.load("resources/fox.jpg"),
-        });
-
-        const mesh = new THREE.Mesh(geometry, material);
-
-        const lineMaterial = new THREE.LineBasicMaterial({color: 0xffff00});
-        const line = new THREE.LineSegments(
-            new THREE.WireframeGeometry(geometry), lineMaterial
-        );
-
         const group = new THREE.Group();
-        group.add(mesh);
         this._group = group;
         this._scene.add(group);
 
+        const loadManager = new THREE.LoadingManager();
+        const loader = new THREE.TextureLoader(loadManager);
+
+        // multiple textures
+        const materials = [
+            new THREE.MeshBasicMaterial({ map: loader.load("resources/fox-1.jpg") }),
+            new THREE.MeshBasicMaterial({ map: loader.load("resources/fox-2.jpg") }),
+            new THREE.MeshBasicMaterial({ map: loader.load("resources/fox-1.jpg") }),
+            new THREE.MeshBasicMaterial({ map: loader.load("resources/fox-2.jpg") }),
+            new THREE.MeshBasicMaterial({ map: loader.load("resources/fox-1.jpg") }),
+            new THREE.MeshBasicMaterial({ map: loader.load("resources/fox-2.jpg") }),
+        ];
+
+        const loadingElem = document.querySelector('#loading');
+        const progressBarElem = loadingElem.querySelector('.progressbar');
+
+        loadManager.onLoad = () => {
+            loadingElem.style.display = 'none';
+            const mesh = new THREE.Mesh(geometry, materials);
+            this._group.add(mesh);
+        };
+        loadManager.onProgress = (urlOfLastItemLoaded, itemsLoaded, itemsTotal) => {
+            const progress = itemsLoaded / itemsTotal;
+            sleep(1000);
+            progressBarElem.style.transform = `scaleX(${progress})`;
+        };
     }
 
     resize(){
@@ -95,6 +107,11 @@ class App{
         this._group.rotation.x = time;
         this._group.rotation.y = time;
     }
+}
+
+function sleep(ms) {
+  const wakeUpTime = Date.now() + ms;
+  while (Date.now() < wakeUpTime) {}
 }
 
 window.onload = function() {
