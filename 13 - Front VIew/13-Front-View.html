@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<script type="importmap">
+        	{
+            	"imports": {
+                	"three": "https://unpkg.com/three@0.138.0/build/three.module.js",
+                	"OrbitControls": "https://unpkg.com/three@0.138.0/examples/jsm/controls/OrbitControls.js"
+            	}
+        	}
+		</script>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- view port tag : web browser setting -->
+		<link rel="stylesheet", href="13-Front-View.css">
+		<script type="module", src="13-Front-View.js" defer></script>
+		<!-- java script file type : module, defer: javascript run after loading page -->
+		<script type="text/javascript" src="../../dat.gui/build/dat.gui.min.js"></script>
+	</head>
+	<body>
+		<video id="video" loop muted crossOrigin="anonymous" playsinline style="display:none">
+			<source src="resources/video_30fps_step2_q25.mp4">
+		</video>
+		<div id="webgl-container"></div>
+	</body>
+</html>
